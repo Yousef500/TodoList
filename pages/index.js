@@ -112,7 +112,7 @@ export default function Home() {
       <Navbar />
       <Grid
         container
-        sx={{ flexGrow: 1, overflowX: "hidden" }}
+        sx={{ flexGrow: 1 }}
         justifyContent="center"
         alignItems="center"
       >
@@ -127,56 +127,69 @@ export default function Home() {
           />
         </Grid>
         <Grid item xs={12} lg={7}>
-          <Box>
-            <List sx={{ width: "100%" }}>
-              {tasks.map((task, index) => {
-                return (
-                  <Grid
-                    key={index}
-                    container
-                    justifyContent="center"
-                    alignItems="center"
-                  >
-                    <ListItem disablePadding button disableRipple>
-                      <Grid item xs={9} md={10.5}>
-                        <ListItemButton onClick={() => handleChecked(index)}>
-                          <ListItemIcon>
-                            <Checkbox
-                              edge="start"
-                              checked={task.done}
-                              disableRipple
-                              color={"secondary"}
-                            />
-                          </ListItemIcon>
-                          <ListItemText
-                            sx={{
-                              textDecoration: task.done
-                                ? "line-through"
-                                : "none",
-                            }}
-                            primary={`${task.title}`}
+          <List sx={{ width: "100%" }}>
+            {tasks.map((task, index) => {
+              return (
+                <Grid
+                  key={index}
+                  container
+                  justifyContent="center"
+                  alignItems="center"
+                >
+                  <ListItem disablePadding={true}>
+                    <Grid item xs={8} sm={9} md={10.5}>
+                      <ListItemButton onClick={() => handleChecked(index)}>
+                        <ListItemIcon>
+                          <Checkbox
+                            edge="start"
+                            checked={task.done}
+                            disableRipple
+                            color={"secondary"}
                           />
-                        </ListItemButton>
-                      </Grid>
-                      <Grid item xs={2} md={1.5}>
-                        <Stack direction={"row"}>
-                          <Button
-                            color={"error"}
-                            onClick={() => handleDelete(index)}
-                          >
-                            <DeleteOutlineRoundedIcon />
-                          </Button>
-                          <Button onClick={() => handleOpen(index)}>
-                            <EditOutlinedIcon />
-                          </Button>
-                        </Stack>
-                      </Grid>
-                    </ListItem>
-                  </Grid>
-                );
-              })}
-            </List>
-          </Box>
+                        </ListItemIcon>
+                        <ListItemText
+                          sx={{
+                            textDecoration: task.done ? "line-through" : "none",
+                            textOverflow: "...",
+                            overflow: "hidden",
+                          }}
+                          primary={`${task.title}`}
+                        />
+                      </ListItemButton>
+                    </Grid>
+                    <Grid item xs={4} sm={2} md={1.5}>
+                      <Stack
+                        direction={"row"}
+                        justifyContent="center"
+                        alignItems="center"
+                        sx={{
+                          height: 100,
+                        }}
+                      >
+                        <Button
+                          color={"error"}
+                          onClick={() => handleDelete(index)}
+                          sx={{
+                            height: 100,
+                          }}
+                        >
+                          <DeleteOutlineRoundedIcon />
+                        </Button>
+                        <Button
+                          onClick={() => handleOpen(index)}
+                          sx={{
+                            height: 100,
+                          }}
+                        >
+                          <EditOutlinedIcon />
+                        </Button>
+                      </Stack>
+                    </Grid>
+                  </ListItem>
+                </Grid>
+              );
+            })}
+          </List>
         </Grid>
       </Grid>
       <ModalComponent open={open} handleClose={handleClose}>
@@ -184,7 +197,7 @@ export default function Home() {
           fullWidth
           label="edit task"
           variant={"filled"}
-          onChange={(e) => handleEdit(e, index)}
+          onChange={(e) => handleEdit(e)}
           value={editTitle}
           onKeyUp={(e) => e.key === "Enter" && handleConfirm()}
           autoFocus={true}
@@ -198,6 +211,7 @@ export default function Home() {
           >
             Confirm
           </Button>
+
           <Button variant={"outlined"} onClick={handleClose}>
             Cancel
           </Button>

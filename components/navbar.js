@@ -1,14 +1,12 @@
+import ListAltOutlinedIcon from "@mui/icons-material/ListAltOutlined";
 import {
   AppBar,
   Box,
-  Container,
   Button,
   IconButton,
-  Modal,
   Toolbar,
   Typography,
 } from "@mui/material";
-import ListAltOutlinedIcon from "@mui/icons-material/ListAltOutlined";
 import { useState } from "react";
 import ModalComponent from "./modal";
 
@@ -24,7 +22,7 @@ const Navbar = () => {
 
   return (
     <Box fluid="true">
-      <AppBar position="static">
+      <AppBar position="fixed">
         <Toolbar>
           <IconButton
             size="large"
