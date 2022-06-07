@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <style>
+        .big-font {
+            font-size: 5rem;
+            color: #002F38;
+            font-family: 'Lateef', cursive;
+            margin-top: 0;
+            padding: 0;
+            direction: rtl;
+            justify-self: center;
+
+        }
+
+        .over {
+            overflow: hidden;
+        }
+
+        .logo {
+            width: 10rem;
+            max-height: 6rem;
+            margin: 1rem;
+        }
+
+        .logo:hover {
+            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+            cursor: pointer;
+        }
+
+        .maintenance {
+            width: 45rem;
+            max-height: 30rem;
+            margin-left: 5rem;
+            margin-bottom: 0;
+            /* border-width: 1px;
+            border-color: black;
+            border-style: solid;
+            padding: 0; */
+            justify-self: center;
+
+        }
+
+        @media only screen and (max-device-width: 760px) {
+            .maintenance {
+                margin-left: 2rem;
+                width: 35rem;
+                /* border-width: 1px;
+                border-color: black;
+                border-style: solid;
+                padding: 0; */
+                justify-self: center;
+
+            }
+
+            .big-font {
+                padding-left: 3rem;
+                justify-self: center;
+
+            }
+        }
+
+        @media only screen and (max-device-width: 540px) {
+            .maintenance {
+                margin-right: 0;
+                /* border-width: 1px;
+                border-color: black;
+                border-style: solid;
+                padding: 0; */
+                justify-self: center;
+
+            }
+
+            .big-font {
+                padding-right: 5rem;
+                font-size: 3rem;
+                justify-self: center;
+
+            }
+        }
+
+        @media only screen and (device-width: 280px) {
+            .maintenance {
+                padding-right: 1rem;
+                /* border-width: 1px;
+                border-color: black;
+                border-style: solid;
+                padding: 0; */
+                justify-self: center;
+
+            }
+
+            .big-font {
+                padding: 1rem;
+                padding-left: 2rem;
+                font-size: xx-large;
+                justify-self: center;
+            }
+        }
+    </style>
+    <link rel="icon" href="./logo.jpeg">
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lateef&display=swap" rel="stylesheet">
+    <!-- Optional theme -->
+    <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous"> -->
+
+    <!-- Latest compiled and minified JavaScript -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css"
+        crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js"
+        crossorigin="anonymous"></script>
+
+    <title>مكتب التطوير المتقدم للاستشارات الإدارية</title>
+</head>
+
+<body>
+    <div class="container over">
+        <img src="./logo.jpeg" class="img-thumbnail logo position-absolute top-0 start-0" />
+        <div class="d-flex justify-content-center align-items-center flex-column text-center w-100">
+            <img src="./maintenance.jpg" class="maintenance align-self-center" />
+
+            <p class="big-font">
+                الموقع تحت الصيانة...
+            </p>
+        </div>
+    </div>
+</body>
+
+</html>
