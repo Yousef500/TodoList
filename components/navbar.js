@@ -42,7 +42,7 @@ const Navbar = () => {
             </AppBar>
 
             <ModalComponent open={open} handleClose={handleClose}>
-                <Login/>
+                <Login onCancel={handleClose}/>
             </ModalComponent>
         </Box>
     );

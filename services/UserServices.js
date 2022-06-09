@@ -1,6 +1,7 @@
-import MongoClient from "../mongoClient/mongoConnection";
+import mongoClient from "../mongoClient/mongoConnection";
+
+const client = mongoClient;
 
 export const listAllDbs = async () => {
-    const client = await MongoClient
-    return await client.db().admin().listDatabases()
-}
+  return await client.db().admin().listDatabases();
+};
