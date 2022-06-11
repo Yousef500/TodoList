@@ -1,4 +1,4 @@
-import {AppBar, Box, Button, IconButton, Toolbar, Typography} from "@mui/material";
+import {AppBar, Box, Button, Toolbar, Typography} from "@mui/material";
 import ListAltOutlinedIcon from '@mui/icons-material/ListAltOutlined';
 import {useState} from "react";
 import ModalComponent from "./modal";
