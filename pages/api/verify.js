@@ -2,8 +2,9 @@ import jwt from "jsonwebtoken";
 import fs from "fs";
 
 const handler = (req, res) => {
+  const path = `./pages/api`
   const jwtPublicKey = fs.readFileSync(
-    `${__dirname}/../../../../jwtRS256.key.pub`
+    `${path}/jwtRS256.key.pub`
   );
   const token = req.headers.authorization;
   try {

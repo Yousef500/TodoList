@@ -3,7 +3,7 @@ import {Box, Modal} from "@mui/material";
 const ModalComponent = ({open, handleClose, children}) => {
     const style = {
         position: 'absolute',
-        top: '50%',
+        top: '55%',
         left: '50%',
         transform: 'translate(-50%, -50%)',
         width: {xs: 400, md: '50%'},
