@@ -1,6 +1,7 @@
 import jwt from "jsonwebtoken";
 import fs from "fs";
 import { connectToDatabase } from "../../lib/mongodb";
+import { serialize } from "cookie";
 
 const handler = async (req, res) => {
   if (req.method === "POST") {
@@ -11,9 +12,6 @@ const handler = async (req, res) => {
       if (user.password === password) {
         const path = `./pages/api`;
         const jwtPrivateKey = fs.readFileSync(`${path}/jwtRS256.key`);
-        const refreshPrivateKey = fs.readFileSync(
-          `${path}/refresh-private.key`
-        );
 
         const data = {
           time: Date(),
@@ -23,15 +21,17 @@ const handler = async (req, res) => {
 
         const token = jwt.sign(data, jwtPrivateKey, {
           algorithm: "RS256",
-          expiresIn: 3600,
-        });
-        const refreshToken = jwt.sign(data, refreshPrivateKey, {
-          algorithm: "RS256",
           expiresIn: 86400,
         });
 
+        const serializedAccessToken = serialize("access_token", token, {
+          httpOnly: true,
+          maxAge: token.expiresIn,
+        });
+
+        res.setHeader("Set-Cookie", serializedAccessToken);
         res.status(200);
-        res.json({ token, refreshToken, email });
+        res.json({username: user.username});
       } else {
         res.status(403);
         res.json({ message: "Please check your credentials" });
