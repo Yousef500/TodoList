@@ -3,6 +3,7 @@ import fs from "fs";
 import jwt from "jsonwebtoken";
 import {serialize} from "cookie";
 import nodemailer from "nodemailer";
+import bcrypt from "bcrypt";
 
 const handler = async (req, res) => {
     if (req.method !== "POST") req.json({message: "Please use a post method"});
@@ -13,10 +14,12 @@ const handler = async (req, res) => {
         const user = await db.collection("Users").findOne({email});
 
         if (!user) {
+            const salt = await bcrypt.genSalt(10);
+            const hashedPassword = await bcrypt.hash(password, salt);
             const response = await db.collection("Users").insertOne({
                 username,
                 email,
-                password,
+                hashedPassword,
             });
 
             if (response.acknowledged) {
