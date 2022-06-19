@@ -14,7 +14,7 @@ const TodoList = ({tasks, handleChecked, handleDelete, handleOpen}) => {
                         alignContent={"center"}
                     >
                         <Task task={task} handleOpen={handleOpen} handleDelete={handleDelete}
-                              handleChecked={handleChecked}/>
+                              handleChecked={handleChecked} index={index}/>
                     </Grid>
                 );
             })}

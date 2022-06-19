@@ -2,7 +2,6 @@ import {connectToDatabase} from "../../lib/mongodb";
 import fs from "fs";
 import jwt from "jsonwebtoken";
 import {serialize} from "cookie";
-import nodemailer from "nodemailer";
 import bcrypt from "bcrypt";
 
 const handler = async (req, res) => {

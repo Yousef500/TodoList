@@ -2,7 +2,7 @@ import {Checkbox, Grid, IconButton, ListItem, ListItemButton, ListItemIcon, List
 import DeleteOutlineRoundedIcon from "@mui/icons-material/DeleteOutlineRounded";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 
-const Task = ({handleChecked, task, handleDelete, handleOpen}) => {
+const Task = ({handleChecked, task, handleDelete, handleOpen, index}) => {
     return (
         <ListItem disablePadding={true}>
             <Grid item xs={10} md={11}>
