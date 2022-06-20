@@ -1,4 +1,4 @@
-import {Box, Grid, TextField,} from "@mui/material";
+import {Box, Grid, Stack, TextField,} from "@mui/material";
 import LoadingButton from "@mui/lab/LoadingButton";
 import Head from "next/head";
 import {useEffect, useState} from "react";
@@ -8,6 +8,7 @@ import axios from "axios";
 import {toast} from "react-toastify";
 import TodoList from "../components/todoList";
 import EditTask from "../components/editTask";
+import {AddTask, DownloadForOffline} from "@mui/icons-material";
 
 export default function Home() {
     const [loading, setLoading] = useState(false);
@@ -104,6 +105,10 @@ export default function Home() {
         setLoading(false);
     };
 
+    const handleImportList = () => {
+        console.log('import')
+    }
+
     return (
         <Box sx={{overflowX: "hidden"}}>
             <Head>
@@ -115,35 +120,48 @@ export default function Home() {
             <Grid
                 container
                 sx={{flexGrow: 1}}
+                spacing={2}
                 justifyContent="center"
                 alignItems="center"
                 alignContent="center"
+                mt={20}
+                padding={1}
             >
-                <Grid
-                    item
-                    xs={12}
-                    sm={1.5}
-                    md={1.5}
-                    mt={20}
-                    mb={2}
-                    sx={{marginLeft: {xs: 0, sm: 17, md: 9}}}
-                >
-                    <LoadingButton
-                        variant="text"
-                        color={"success"}
-                        fullWidth
-                        disableRipple
-                        sx={{
-                            "&:hover": {background: "none", textDecoration: "underline"},
-                        }}
-                        onClick={handleSaveList}
-                        loading={loading}
-                    >
-                        Save List
-                    </LoadingButton>
-                </Grid>
+                <Grid item xs={12} sm={7} m={'auto'}>
+                    <Stack direction={'row'} spacing={1} justifyContent={'space-between'}>
 
-                <Grid item xs={0} sm={8} md={7}></Grid>
+                        <LoadingButton
+                            variant="text"
+                            color={"success"}
+
+                            disableRipple
+                            sx={{
+                                "&:hover": {background: "none", textDecoration: "underline"},
+                                padding: 0
+                            }}
+                            onClick={handleSaveList}
+                            loading={loading}
+                            endIcon={<AddTask/>}
+                        >
+                            Save
+                        </LoadingButton>
+
+                        <LoadingButton
+                            loading={loading}
+                            variant="text"
+                            color={"primary"}
+                            disableRipple
+                            sx={{
+                                "&:hover": {background: "none", textDecoration: "underline"},
+                                padding: 0
+                            }}
+                            onClick={handleImportList}
+                            endIcon={<DownloadForOffline/>}
+                        >
+                            Import
+                        </LoadingButton>
+                    </Stack>
+                </Grid>
 
                 <Grid item xs={12} sm={7} m={"auto"}>
                     <TextField

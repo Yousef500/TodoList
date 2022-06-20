@@ -2,8 +2,8 @@ import smtpTransport from 'nodemailer-smtp-transport'
 import nodemailer from "nodemailer";
 
 const handler = async (req, res) => {
-    const {email, username} = req.body;
-    if (email.length > 4 && username) {
+    const {email} = req.body;
+    if (email?.length > 4) {
         try {
             const number = Math.floor(Math.random() * 9000 + 1000);
             const transporter = nodemailer.createTransport(smtpTransport({
@@ -153,7 +153,7 @@ const handler = async (req, res) => {
                                         <tr>
                                             <td style="padding-bottom:100px;padding-top:100px;text-align:center;width:100%;">
                                                 <h1 style="margin: 0; color: #ffffff; direction: ltr; font-family: Poppins, Arial, Helvetica, sans-serif; font-size: 38px; font-weight: 700; letter-spacing: normal; line-height: 150%; text-align: center; margin-top: 0; margin-bottom: 0;">
-                                                    <span class="tinyMce-placeholder">Welcome, ${username}!</span></h1>
+                                                    <span class="tinyMce-placeholder">Hi there!</span></h1>
                                             </td>
                                         </tr>
                                     </table>
@@ -274,9 +274,10 @@ const handler = async (req, res) => {
             }
 
             const {response} = await transporter.sendMail(mailOptions);
+            console.log(response)
 
             if (response) {
-                return res.status(200).json(number);
+                return res.status(200).json({number});
             }
         } catch (e) {
             console.log({e});

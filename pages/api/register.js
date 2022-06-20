@@ -27,7 +27,7 @@ const handler = async (req, res) => {
 
                 const data = {time: Date(), username, email};
 
-                const token = jwt.sign(data, jwtPrivateKey, {
+                const token = await jwt.sign(data, jwtPrivateKey, {
                     algorithm: "RS256",
                     expiresIn: 86400,
                 });
@@ -36,6 +36,8 @@ const handler = async (req, res) => {
                     httpOnly: true,
                     maxAge: token.expiresIn,
                 });
+
+                res.setHeader('Set-Cookie', serializedAccessToken);
 
                 res.status(200).json({username});
             }

@@ -73,7 +73,7 @@ const Auth = () => {
                 open={Boolean(anchorEl)}
                 onClose={handleMenuClose}
             >
-                <MenuItem onClick={handleLogout}>Logout</MenuItem>
+                <MenuItem onClick={handleLogout}>Log out</MenuItem>
             </Menu>
 
             <ModalComponent open={open} handleClose={handleClose}>
