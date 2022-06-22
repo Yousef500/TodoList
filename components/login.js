@@ -6,10 +6,10 @@ import {
     IconButton,
     InputAdornment,
     Stack,
-    Step,
+    Step, StepContent, StepContext,
     StepLabel,
     Stepper,
-    TextField,
+    TextField, Typography,
 } from "@mui/material";
 import {useState} from "react";
 import {AccountBoxOutlined, Visibility, VisibilityOff} from "@mui/icons-material";
@@ -17,6 +17,7 @@ import {useForm} from "react-hook-form";
 import axios from "axios";
 import LoadingButton from "@mui/lab/LoadingButton";
 import {toast} from "react-toastify";
+import GoogleLogin from "./googleLogin";
 
 const Login = ({onCancel, setUsername}) => {
         const {
@@ -125,10 +126,9 @@ const Login = ({onCancel, setUsername}) => {
                 justifyContent={"center"}
                 alignContent={"center"}
                 onSubmit={handleSubmit(handleOnSubmit)}
-                sx={{mt: 2}}
                 padding={1}
             >
-                <AccountBoxOutlined sx={{alignSelf: 'center', mb: 2, fontSize: 80}} color={'primary'}/>
+                <AccountBoxOutlined sx={{alignSelf: 'center', mb: 1, fontSize: 80}} color={'primary'}/>
                 {
                     isNewUser ? (
                         <Box sx={{width: '100%'}}>
@@ -168,6 +168,16 @@ const Login = ({onCancel, setUsername}) => {
                                                 Next
                                             </LoadingButton>
                                         </Stack>
+                                        <Button
+                                            fullWidth={true}
+                                            variant={"text"}
+                                            size={"large"}
+                                            color={'inherit'}
+                                            sx={{mt: 1}}
+                                            onClick={handleIsNewUser}
+                                        >
+                                            Already have an account? Login!
+                                        </Button>
                                     </Grid> :
                                     activeStep === 1 ? <Grid item xs={12}>
                                             <Stack alignItems={'center'} spacing={1} direction={'row'}
@@ -253,17 +263,6 @@ const Login = ({onCancel, setUsername}) => {
                                             </Grid>
                                         </>
                                 }
-                                {/*<Grid item xs={12}>*/}
-                                {/*    <Button*/}
-                                {/*        fullWidth={true}*/}
-                                {/*        variant={"text"}*/}
-                                {/*        sx={{"&:hover": {backgroundColor: "#556cd6", color: "white"}}}*/}
-                                {/*        size={"large"}*/}
-                                {/*        onClick={handleIsNewUser}*/}
-                                {/*    >*/}
-                                {/*        {isNewUser ? "Already have an account? Login!" : "New? Sign up!"}*/}
-                                {/*    </Button>*/}
-                                {/*</Grid>*/}
                             </Grid>
                         </Box>
                     ) : (
@@ -311,7 +310,7 @@ const Login = ({onCancel, setUsername}) => {
                                     type={"submit"}
                                     loading={loading}
                                 >
-                                    Go
+                                    Login
                                 </LoadingButton>
                             </Grid>
 
@@ -327,28 +326,21 @@ const Login = ({onCancel, setUsername}) => {
                                 </Button>
                             </Grid>
 
-                            {/*<Grid item xs={12}>*/}
-                            {/*    <Button*/}
-                            {/*        fullWidth={true}*/}
-                            {/*        variant={"text"}*/}
-                            {/*        size={"large"}*/}
-                            {/*        onClick={handleIsNewUser}*/}
-                            {/*    >*/}
-                            {/*        {isNewUser ? "Already have an account? Login!" : "New? Sign up!"}*/}
-                            {/*    </Button>*/}
-                            {/*</Grid>*/}
+                            <Grid item xs={6}>
+                                <Button
+                                    fullWidth={true}
+                                    variant={"text"}
+                                    size={"large"}
+                                    color={'inherit'}
+                                    onClick={handleIsNewUser}
+                                >
+                                    New? Sign up!
+                                </Button>
+                            </Grid>
+                            <Grid item xs={6}><GoogleLogin/></Grid>
                         </Grid>
                     )
                 }
-                <Button
-                    fullWidth={true}
-                    variant={"text"}
-                    size={"large"}
-                    color={'inherit'}
-                    onClick={handleIsNewUser}
-                >
-                    {isNewUser ? "have an account? Login!" : "New? Sign up!"}
-                </Button>
             </Stack>
         );
     }

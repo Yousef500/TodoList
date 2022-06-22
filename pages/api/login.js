@@ -29,7 +29,7 @@ const handler = async (req, res) => {
 
                     const serializedAccessToken = serialize("access_token", token, {
                         httpOnly: true,
-                        maxAge: token.expiresIn,
+                        maxAge: 86400,
                     });
 
                     res.setHeader("Set-Cookie", serializedAccessToken);

@@ -131,14 +131,8 @@ export default function Home() {
                     <Stack direction={'row'} spacing={1} justifyContent={'space-between'}>
 
                         <LoadingButton
-                            variant="text"
+                            variant="contained"
                             color={"success"}
-
-                            disableRipple
-                            sx={{
-                                "&:hover": {background: "none", textDecoration: "underline"},
-                                padding: 0
-                            }}
                             onClick={handleSaveList}
                             loading={loading}
                             endIcon={<AddTask/>}
@@ -148,13 +142,8 @@ export default function Home() {
 
                         <LoadingButton
                             loading={loading}
-                            variant="text"
+                            variant="contained"
                             color={"primary"}
-                            disableRipple
-                            sx={{
-                                "&:hover": {background: "none", textDecoration: "underline"},
-                                padding: 0
-                            }}
                             onClick={handleImportList}
                             endIcon={<DownloadForOffline/>}
                         >
