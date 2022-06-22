@@ -6,13 +6,12 @@ const ModalComponent = ({open, handleClose, children}) => {
         top: '56%',
         left: '50%',
         transform: 'translate(-50%, -50%)',
-        width: {xs: '100%', sm: 400, md: '50%'},
+        width: {xs: '100%', sm: '65%', md: '45%'},
         bgcolor: 'background.paper',
         border: '2px solid #000',
         borderRadius: "20px",
         boxShadow: 24,
         p: 4,
-        height: {xs: '100%', sm: 'max-content'}
     };
 
     return (

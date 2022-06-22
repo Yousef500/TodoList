@@ -1,6 +1,18 @@
-import {Button, Grid, IconButton, InputAdornment, Stack, TextField,} from "@mui/material";
+import {
+    Box,
+    Button,
+    Grid,
+    Icon,
+    IconButton,
+    InputAdornment,
+    Stack,
+    Step,
+    StepLabel,
+    Stepper,
+    TextField,
+} from "@mui/material";
 import {useState} from "react";
-import {Visibility, VisibilityOff} from "@mui/icons-material";
+import {AccountBoxOutlined, Visibility, VisibilityOff} from "@mui/icons-material";
 import {useForm} from "react-hook-form";
 import axios from "axios";
 import LoadingButton from "@mui/lab/LoadingButton";
@@ -19,29 +31,18 @@ const Login = ({onCancel, setUsername}) => {
         const [showPassword, setShowPassword] = useState(false);
         const [isNewUser, setIsNewUser] = useState(false);
         const [loading, setLoading] = useState(false);
-        const [verifiedEmail, setVerifiedEmail] = useState(false);
         const [secretCode, setSecretCode] = useState(0);
+        const [activeStep, setActiveStep] = useState(0);
+        const [completed, setCompleted] = useState({0: {done: false}, 1: {done: false}})
 
         const handleIsNewUser = () => {
             setIsNewUser(!isNewUser);
+            setActiveStep(0);
         };
 
         const handleShowPassword = () => {
             setShowPassword(!showPassword);
         };
-
-        const handleCodeCheck = () => {
-            setLoading(true);
-            const code = Number(getValues('code'));
-            if (code === secretCode) {
-                setVerifiedEmail(true);
-                toast.success('Email verified')
-            } else {
-                setVerifiedEmail(false);
-                toast.error('Wrong code');
-            }
-            setLoading(false);
-        }
 
         const handleVerifyEmail = async () => {
             setLoading(true);
@@ -51,9 +52,13 @@ const Login = ({onCancel, setUsername}) => {
                     const {data} = await axios.post(`/api/verify-email`, {email});
                     setSecretCode(Number(data.number))
                     toast.success('Email sent')
+                    setCompleted({
+                        ...completed,
+                        [activeStep]: {done: true}
+                    })
+                    setActiveStep((prevState) => prevState + 1)
                 } catch (e) {
-                    console.log({e});
-                    toast.error('Something went wrong');
+                    toast.error(e.response.data.message || 'Something went wrong');
                 }
             } else {
                 toast.error("Please fill in your email to verify");
@@ -61,9 +66,25 @@ const Login = ({onCancel, setUsername}) => {
             setLoading(false)
         }
 
+        const handleCodeCheck = () => {
+            setLoading(true);
+            const code = Number(getValues('code'));
+            if (code === secretCode) {
+                toast.success('Email verified')
+                setCompleted({
+                    ...completed,
+                    [activeStep]: {done: true}
+                })
+                setActiveStep(2);
+            } else {
+                toast.error('Wrong code');
+            }
+            setLoading(false);
+        }
+
         const handleOnSubmit = async (data) => {
             setLoading(true);
-            if (isNewUser && verifiedEmail) {
+            if (isNewUser) {
                 const {username, email, password} = data;
                 try {
                     const response = await axios.post("/api/register", {
@@ -107,143 +128,227 @@ const Login = ({onCancel, setUsername}) => {
                 sx={{mt: 2}}
                 padding={1}
             >
-                {isNewUser ? <Stack direction={'row'} justifyContent={'space-evenly'} spacing={1}>
-                        <TextField
-                            fullWidth={true}
-                            autoFocus={true}
-                            type={"email"}
-                            {...register("email", {
-                                required: "Email is required",
-                            })}
-                            label="Email"
-                            error={!!errors?.email}
-                            helperText={errors.email ? `${errors.email.message}` : ""}
-                            disabled={(verifiedEmail && isNewUser)}
-                        />
-                        <LoadingButton
-                            loading={loading}
-                            variant={'contained'}
-                            color={'success'}
-                            onClick={handleVerifyEmail}
-                            disabled={(verifiedEmail && isNewUser)}
-                        >
-                            Verify
-                        </LoadingButton>
-                    </Stack>
-                    : <TextField
-                        autoFocus={true}
-                        fullWidth={true}
-                        type={"email"}
-                        {...register("email", {
-                            required: "Email is required",
-                        })}
-                        label="Email"
-                        error={!!errors?.email}
-                        helperText={errors.email ? `${errors.email.message}` : ""}
-                        disabled={(verifiedEmail && isNewUser)}
-                    />
+                <AccountBoxOutlined sx={{alignSelf: 'center', mb: 2, fontSize: 80}} color={'primary'}/>
+                {
+                    isNewUser ? (
+                        <Box sx={{width: '100%'}}>
+                            <Stepper activeStep={activeStep}>
+                                <Step completed={completed[0].done}>
+                                    <StepLabel>Verify email</StepLabel>
+                                </Step>
+                                <Step completed={completed[1].done}>
+                                    <StepLabel>Enter Code</StepLabel>
+                                </Step>
+                                <Step>
+                                    <StepLabel>Last step</StepLabel>
+                                </Step>
+                            </Stepper>
+
+                            <Grid container spacing={1} mt={2}>
+                                {activeStep === 0 ?
+                                    <Grid item xs={12}>
+                                        <Stack direction={'row'} justifyContent={'space-evenly'} spacing={1}>
+                                            <TextField
+                                                fullWidth={true}
+                                                autoFocus={true}
+                                                type={"email"}
+                                                {...register("email", {
+                                                    required: "Email is required",
+                                                })}
+                                                label="Email"
+                                                error={!!errors?.email}
+                                                helperText={errors.email ? `${errors.email.message}` : ""}
+                                            />
+                                            <LoadingButton
+                                                loading={loading}
+                                                variant={'contained'}
+                                                color={'success'}
+                                                onClick={handleVerifyEmail}
+                                            >
+                                                Next
+                                            </LoadingButton>
+                                        </Stack>
+                                    </Grid> :
+                                    activeStep === 1 ? <Grid item xs={12}>
+                                            <Stack alignItems={'center'} spacing={1} direction={'row'}
+                                                   justifyContent={'flex-start'}>
+                                                <TextField
+                                                    {...register("code", {
+                                                        required: "code is required",
+                                                    })}
+                                                    label="Code"
+                                                    error={!!errors?.code}
+                                                    helperText={errors.code ? `${errors.code.message}` : ""}
+                                                    size={"small"}
+                                                    type={'number'}
+                                                />
+                                                <Button
+                                                    variant={'contained'}
+                                                    color={'success'}
+                                                    onClick={handleCodeCheck}
+                                                >
+                                                    Next
+                                                </Button>
+                                            </Stack>
+                                        </Grid> :
+                                        activeStep === 2 &&
+                                        <>
+                                            <Grid item xs={12}>
+                                                <TextField
+                                                    type={"text"}
+                                                    fullWidth={true}
+                                                    autoComplete={"off"}
+                                                    {...register("username", {
+                                                        required: "Username is required",
+                                                    })}
+                                                    label="Username"
+                                                    error={!!errors?.username}
+                                                    helperText={errors.username ? `${errors.username.message}` : ""}
+                                                />
+                                            </Grid>
+                                            <Grid item xs={12}>
+                                                <TextField
+                                                    type={showPassword ? "text" : "password"}
+                                                    fullWidth={true}
+                                                    label="Password"
+                                                    InputProps={{
+                                                        endAdornment: (
+                                                            <InputAdornment position={"end"}>
+                                                                <IconButton onClick={handleShowPassword}>
+                                                                    {showPassword ? <Visibility/> : <VisibilityOff/>}
+                                                                </IconButton>
+                                                            </InputAdornment>
+                                                        ),
+                                                    }}
+                                                    {...register("password", {
+                                                        required: "Password is required",
+                                                    })}
+                                                    error={!!errors?.password}
+                                                    helperText={errors.password ? `${errors.password.message}` : ""}
+                                                />
+                                            </Grid>
+                                            <Grid item xs={6}>
+                                                <LoadingButton
+                                                    fullWidth={true}
+                                                    variant={"contained"}
+                                                    color={"success"}
+                                                    size={"large"}
+                                                    type={"submit"}
+                                                    loading={loading}
+                                                >
+                                                    Finish
+                                                </LoadingButton>
+                                            </Grid>
+
+                                            <Grid item xs={6}>
+                                                <Button
+                                                    fullWidth={true}
+                                                    variant={"text"}
+                                                    color={"warning"}
+                                                    size={"large"}
+                                                    onClick={onCancel}
+                                                >
+                                                    Cancel
+                                                </Button>
+                                            </Grid>
+                                        </>
+                                }
+                                {/*<Grid item xs={12}>*/}
+                                {/*    <Button*/}
+                                {/*        fullWidth={true}*/}
+                                {/*        variant={"text"}*/}
+                                {/*        sx={{"&:hover": {backgroundColor: "#556cd6", color: "white"}}}*/}
+                                {/*        size={"large"}*/}
+                                {/*        onClick={handleIsNewUser}*/}
+                                {/*    >*/}
+                                {/*        {isNewUser ? "Already have an account? Login!" : "New? Sign up!"}*/}
+                                {/*    </Button>*/}
+                                {/*</Grid>*/}
+                            </Grid>
+                        </Box>
+                    ) : (
+                        <Grid container spacing={1}>
+                            <Grid item xs={12}>
+                                <TextField
+                                    autoFocus={true}
+                                    fullWidth={true}
+                                    type={"email"}
+                                    {...register("email", {
+                                        required: "Email is required",
+                                    })}
+                                    label="Email"
+                                    error={!!errors?.email}
+                                    helperText={errors.email ? `${errors.email.message}` : ""}
+                                />
+                            </Grid>
+                            <Grid item xs={12}>
+                                <TextField
+                                    type={showPassword ? "text" : "password"}
+                                    fullWidth={true}
+                                    label="Password"
+                                    InputProps={{
+                                        endAdornment: (
+                                            <InputAdornment position={"end"}>
+                                                <IconButton onClick={handleShowPassword}>
+                                                    {showPassword ? <Visibility/> : <VisibilityOff/>}
+                                                </IconButton>
+                                            </InputAdornment>
+                                        ),
+                                    }}
+                                    {...register("password", {
+                                        required: "Password is required",
+                                    })}
+                                    error={!!errors?.password}
+                                    helperText={errors.password ? `${errors.password.message}` : ""}
+                                />
+                            </Grid>
+                            <Grid item xs={6}>
+                                <LoadingButton
+                                    fullWidth={true}
+                                    variant={"contained"}
+                                    color={"primary"}
+                                    size={"large"}
+                                    type={"submit"}
+                                    loading={loading}
+                                >
+                                    Go
+                                </LoadingButton>
+                            </Grid>
+
+                            <Grid item xs={6}>
+                                <Button
+                                    fullWidth={true}
+                                    variant={"outlined"}
+                                    color={"warning"}
+                                    size={"large"}
+                                    onClick={onCancel}
+                                >
+                                    Cancel
+                                </Button>
+                            </Grid>
+
+                            {/*<Grid item xs={12}>*/}
+                            {/*    <Button*/}
+                            {/*        fullWidth={true}*/}
+                            {/*        variant={"text"}*/}
+                            {/*        size={"large"}*/}
+                            {/*        onClick={handleIsNewUser}*/}
+                            {/*    >*/}
+                            {/*        {isNewUser ? "Already have an account? Login!" : "New? Sign up!"}*/}
+                            {/*    </Button>*/}
+                            {/*</Grid>*/}
+                        </Grid>
+                    )
                 }
-
-                {isNewUser && (
-                    <>
-                        <Stack alignItems={'center'} spacing={1} direction={'row'} justifyContent={'flex-start'}>
-                            <TextField
-                                {...register("code", {
-                                    required: "code is required",
-                                })}
-                                label="Code"
-                                error={!!errors?.code}
-                                helperText={errors.code ? `${errors.code.message}` : ""}
-                                disabled={(verifiedEmail && isNewUser) || !watch('email')}
-                                size={"small"}
-                                type={'number'}
-                            />
-                            <Button
-                                variant={'contained'}
-                                color={'primary'}
-                                disabled={(verifiedEmail && isNewUser) || !watch('email')}
-                                onClick={handleCodeCheck}
-                            >
-                                Check
-                            </Button>
-                        </Stack>
-
-                        <TextField
-                            type={"text"}
-                            fullWidth={true}
-                            autoComplete={"off"}
-                            {...register("username", {
-                                required: "Username is required",
-                            })}
-                            label="Username"
-                            error={!!errors?.username}
-                            helperText={errors.username ? `${errors.username.message}` : ""}
-                            disabled={(!verifiedEmail && isNewUser)}
-                        />
-                    </>
-                )}
-
-                <TextField
-                    type={showPassword ? "text" : "password"}
+                <Button
                     fullWidth={true}
-                    label="Password"
-                    InputProps={{
-                        endAdornment: (
-                            <InputAdornment position={"end"}>
-                                <IconButton onClick={handleShowPassword}>
-                                    {showPassword ? <Visibility/> : <VisibilityOff/>}
-                                </IconButton>
-                            </InputAdornment>
-                        ),
-                    }}
-                    {...register("password", {
-                        required: "Password is required",
-                    })}
-                    error={!!errors?.password}
-                    helperText={errors.password ? `${errors.password.message}` : ""}
-                    disabled={(!verifiedEmail && isNewUser)}
-                />
-                <Grid container spacing={1} paddingRight={1.5}>
-                    <Grid item xs={6}>
-                        <LoadingButton
-                            fullWidth={true}
-                            variant={"outlined"}
-                            sx={{"&:hover": {backgroundColor: "#19857b", color: "white"}}}
-                            color={"secondary"}
-                            size={"large"}
-                            type={"submit"}
-                            loading={loading}
-                            disabled={(isNewUser && !verifiedEmail)}
-                        >
-                            Go
-                        </LoadingButton>
-                    </Grid>
-
-                    <Grid item xs={6}>
-                        <Button
-                            fullWidth={true}
-                            variant={"outlined"}
-                            color={"warning"}
-                            size={"large"}
-                            onClick={onCancel}
-                            sx={{"&:hover": {backgroundColor: "#ef6c00", color: "white"}}}
-                        >
-                            Cancel
-                        </Button>
-                    </Grid>
-
-                    <Grid item xs={12}>
-                        <Button
-                            fullWidth={true}
-                            variant={"text"}
-                            sx={{"&:hover": {backgroundColor: "#556cd6", color: "white"}}}
-                            size={"large"}
-                            onClick={handleIsNewUser}
-                        >
-                            {isNewUser ? "Already have an account? Login!" : "New? Sign up!"}
-                        </Button>
-                    </Grid>
-                </Grid>
+                    variant={"text"}
+                    size={"large"}
+                    color={'inherit'}
+                    onClick={handleIsNewUser}
+                >
+                    {isNewUser ? "have an account? Login!" : "New? Sign up!"}
+                </Button>
             </Stack>
         );
     }

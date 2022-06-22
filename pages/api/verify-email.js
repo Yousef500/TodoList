@@ -1,10 +1,14 @@
 import smtpTransport from 'nodemailer-smtp-transport'
 import nodemailer from "nodemailer";
+import {connectToDatabase} from "../../lib/mongodb";
 
 const handler = async (req, res) => {
     const {email} = req.body;
     if (email?.length > 4) {
         try {
+            const {db} = await connectToDatabase();
+            const user = db.collection('Users').findOne({email});
+            if (user.email) return res.status(400).json({message: "User already exists"});
             const number = Math.floor(Math.random() * 9000 + 1000);
             const transporter = nodemailer.createTransport(smtpTransport({
                 service: 'gmail',
